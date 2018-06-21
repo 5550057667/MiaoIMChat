@@ -1,15 +1,20 @@
 package com.sky_wf.chinachat.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.sky_wf.chinachat.R;
@@ -19,6 +24,7 @@ import com.sky_wf.chinachat.chat.listener.CallBakcListener;
 import com.sky_wf.chinachat.chat.listener.SendCodeListener;
 import com.sky_wf.chinachat.chat.manager.ChatManager;
 import com.sky_wf.chinachat.utils.Debugger;
+import com.sky_wf.chinachat.utils.SoftKeyboardStateHelper;
 import com.sky_wf.chinachat.utils.Utils;
 
 import java.util.concurrent.TimeUnit;
@@ -27,15 +33,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-
 
 /**
  * @Date : 2018/5/10
  * @Author : WF
  * @Description :用户注册
  */
-public class RegisterActivity extends BaseActivity implements CallBakcListener, SendCodeListener
+public class RegisterActivity extends BaseActivity
+        implements CallBakcListener, SendCodeListener, View.OnTouchListener
 {
 
     @BindView(R.id.img_back)
@@ -52,6 +59,13 @@ public class RegisterActivity extends BaseActivity implements CallBakcListener, 
     EditText etLoginPw;
     @BindView(R.id.btn_register)
     Button btnRegister;
+    @BindView(R.id.linear)
+    LinearLayout linear;
+    @BindView(R.id.scroll)
+    ScrollView scroll;
+
+    private boolean isScroll = false;
+    private SoftKeyboardStateHelper softKeyboardStateHelper;
 
     private final String TAG = "RegisterActivity";
 
@@ -64,6 +78,7 @@ public class RegisterActivity extends BaseActivity implements CallBakcListener, 
         Debugger.d(TAG, "<<onCreate>>");
         ChatManager.getInstance().setCallBackListener(this);
         ChatManager.getInstance().setCodeListener(this);
+
     }
 
     @Override
@@ -79,6 +94,7 @@ public class RegisterActivity extends BaseActivity implements CallBakcListener, 
     {
         super.onStop();
         Debugger.d(TAG, "<<onStop>>");
+        hideKeyBoard();
     }
 
     @Override
@@ -86,6 +102,7 @@ public class RegisterActivity extends BaseActivity implements CallBakcListener, 
     {
         super.onDestroy();
         Debugger.d(TAG, "<<onDestroy>>");
+
     }
 
     @Override
@@ -97,11 +114,21 @@ public class RegisterActivity extends BaseActivity implements CallBakcListener, 
     }
 
     @Override
+    protected void initView()
+    {
+
+    }
+
+    @Override
     protected void setListener()
     {
         etRegisterPhone.addTextChangedListener(new TelTextChange());
         etLoginPw.addTextChangedListener(new PwdTextWatch());
         etLoginPhone.addTextChangedListener(new CodeTextWatch());
+        etRegisterPhone.setOnTouchListener(this);
+        etLoginPhone.setOnTouchListener(this);
+        etLoginPw.setOnTouchListener(this);
+        scroll.setOnTouchListener(this);
 
     }
 
@@ -119,7 +146,6 @@ public class RegisterActivity extends BaseActivity implements CallBakcListener, 
                 break;
             case R.id.btn_captcha:
                 sendSmsCode();
-
                 break;
             case R.id.btn_register:
                 register();
@@ -127,23 +153,29 @@ public class RegisterActivity extends BaseActivity implements CallBakcListener, 
         }
     }
 
-    private void sendSmsCode() {
-        if(isNetAvaliable()) {
+    private void sendSmsCode()
+    {
+        if (isNetAvaliable())
+        {
             ChatManager.getInstance().sendSmsCode(this, etRegisterPhone.getText().toString());
-        }else {
-            Utils.showShortToast(btnRegister,getString(R.string.net_error));
+        } else
+        {
+            Utils.showShortToast(btnRegister, getString(R.string.net_error));
         }
     }
 
     private void register()
     {
         setButtonEnable(false);
-        if(isNetAvaliable()) {
+        if (isNetAvaliable())
+        {
+            showDialog("注册中....");
             ChatManager.getInstance().createACount(this, btnRegister,
                     etRegisterPhone.getText().toString(), etLoginPw.getText().toString(),
                     etLoginPhone.getText().toString());
-        }else {
-            Utils.showShortToast(btnRegister,getString(R.string.net_error));
+        } else
+        {
+            Utils.showShortToast(btnRegister, getString(R.string.net_error));
         }
     }
 
@@ -152,9 +184,12 @@ public class RegisterActivity extends BaseActivity implements CallBakcListener, 
     {
 
         setButtonEnable(true);
-        Observable.timer(1,TimeUnit.SECONDS).subscribe(new Action1<Long>() {
+        Observable.timer(1, TimeUnit.SECONDS).subscribe(new Action1<Long>()
+        {
             @Override
-            public void call(Long aLong) {
+            public void call(Long aLong)
+            {
+                hideDialog();
                 Intent intent = new Intent();
                 intent.setClass(RegisterActivity.this, EditUserNameActivity.class);
                 startActivity(intent);
@@ -168,22 +203,68 @@ public class RegisterActivity extends BaseActivity implements CallBakcListener, 
     @Override
     public void onFailed(Exception e)
     {
+        hideDialog();
         setButtonEnable(true);
-        LoginExceptionHandle.handleErrorMsg(btnCaptcha,e);
+        LoginExceptionHandle.handleErrorMsg(btnCaptcha, e);
     }
-
 
     @Override
     public void onSendCodeSucess()
     {
         Utils.showShortToast(btnRegister, getString(R.string.send_code));
-        new MyCount(60000,1000).start();
+        new MyCount(60000, 1000).start();
     }
 
     @Override
     public void onSendCodeFailed()
     {
         Utils.showShortToast(btnRegister, getString(R.string.error_send_code));
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event)
+    {
+        switch (v.getId())
+        {
+
+            case R.id.et_login_pw:
+                etLoginPw.setFocusable(true);
+                etLoginPw.setFocusableInTouchMode(true);
+                etLoginPw.requestFocus();
+                Observable.interval(200, TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Long>()
+                        {
+                            @Override
+                            public void call(Long aLong)
+                            {
+                                isScroll = true;
+                                scroll.fullScroll(ScrollView.FOCUS_DOWN);
+                            }
+                        });
+                etRegisterPhone.setFocusable(false);
+                etLoginPhone.setFocusable(false);
+                break;
+
+            case R.id.linear:
+                hideKeyBoard();
+                break;
+            case R.id.et_login_phone:
+                etLoginPhone.setFocusable(true);
+                etLoginPhone.setFocusableInTouchMode(true);
+                etLoginPhone.requestFocus();
+                etLoginPw.setFocusable(false);
+                etRegisterPhone.setFocusable(false);
+
+                break;
+            case R.id.et_register_phone:
+                etRegisterPhone.setFocusable(true);
+                etRegisterPhone.setFocusableInTouchMode(true);
+                etRegisterPhone.requestFocus();
+                etLoginPw.setFocusable(false);
+                etLoginPhone.setFocusable(false);
+                break;
+        }
+        return false;
     }
 
     // 手机号EditText监听器
@@ -315,27 +396,28 @@ public class RegisterActivity extends BaseActivity implements CallBakcListener, 
         }
     }
 
-    //定义一个计时器
+    // 定义一个计时器
     private class MyCount extends CountDownTimer
     {
 
         /**
-         * @param millisInFuture    The number of millis in the future from the call
-         *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
-         *                          is called.
-         * @param countDownInterval The interval along the way to receive
-         *                          {@link #onTick(long)} callbacks.
+         * @param millisInFuture
+         *            The number of millis in the future from the call to {@link #start()} until the
+         *            countdown is done and {@link #onFinish()} is called.
+         * @param countDownInterval
+         *            The interval along the way to receive {@link #onTick(long)} callbacks.
          */
-        public MyCount(long millisInFuture, long countDownInterval) {
+        public MyCount(long millisInFuture, long countDownInterval)
+        {
             super(millisInFuture, countDownInterval);
         }
 
         @Override
         public void onTick(long millisUntilFinished)
         {
-          btnCaptcha.setEnabled(false);
-          btnCaptcha.setBackgroundResource(R.drawable.btn_send_code);
-          btnCaptcha.setText("("+millisUntilFinished/1000+")");
+            btnCaptcha.setEnabled(false);
+            btnCaptcha.setBackgroundResource(R.drawable.btn_send_code);
+            btnCaptcha.setText("(" + millisUntilFinished / 1000 + ")");
         }
 
         @Override

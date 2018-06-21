@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingTop="13dp" >
+    android:paddingTop="13dp">
 
     <TextView
         android:id="@+id/time_stamp"
@@ -16,14 +16,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:paddingLeft="20dp" >
+        android:paddingLeft="20dp">
 
         <ImageView
             android:id="@+id/iv_user_head"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="5dp"
             android:background="@drawable/head"
 
@@ -36,9 +36,9 @@
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@id/iv_user_head"
             android:layout_toRightOf="@+id/ll_loading"
+            android:background="@drawable/bg_chat_sent"
             android:gravity="center"
-            android:padding="17dp"
-            android:background="@drawable/bg_chat_sent" >
+            android:padding="17dp">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="7dp"
                 android:gravity="center_vertical"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_file_name"
@@ -68,7 +68,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp" >
+                    android:layout_marginTop="3dp">
 
                     <TextView
                         android:id="@+id/tv_file_size"
@@ -128,15 +128,15 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <ProgressBar
                 android:id="@+id/pb_sending"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:indeterminateBehavior="repeat"
                 android:indeterminateDrawable="@drawable/small_progress"
-				android:indeterminateOnly="true"
-				android:indeterminateBehavior="repeat"
+                android:indeterminateOnly="true"
                 android:visibility="visible" />
 
             <TextView

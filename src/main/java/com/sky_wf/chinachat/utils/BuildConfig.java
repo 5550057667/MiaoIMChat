@@ -3,7 +3,7 @@ package com.sky_wf.chinachat.utils;
 /**
  * @Date :  2018/5/31
  * @Author : WF
- * @Description :
+ * @Description :配置第三方SDK参数
  */
 public class BuildConfig {
 

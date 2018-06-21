@@ -1,13 +1,14 @@
 package com.sky_wf.chinachat.utils;
 
 /**
- * @Date :  2018/5/7
+ * @Date : 2018/5/7
  * @Author : WF
- * @Description :
+ * @Description :常量
  */
-public class Constansts {
+public class Constansts
+{
     public static final String RUN_COUNT = "RUN_COUNT";
-    public  static final String LoginState = "LoginState";
+    public static final String LoginState = "LoginState";
     public static final String User_ID = "USER_ID";
     public static final String PHONE = "phone";
     public static final String PWD = "pwd";
@@ -24,5 +25,8 @@ public class Constansts {
     public static final int index_Discover = 2;
     public static final int index_Profile = 3;
 
+    public static final String IMAGE_DIR = "chat/image/";
+    public static final String AUDIO_DIR = "chat/audio/";
+    public static final String VIDEO_DIR = "chat/video";
 
 }

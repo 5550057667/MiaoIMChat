@@ -4,10 +4,10 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingTop="13dp" >
+    android:paddingTop="13dp">
 
     <TextView
-        android:id="@+id/timestamp"
+        android:id="@+id/time_stamp"
         style="@style/chat_time_stampe_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -15,14 +15,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp" >
+        android:layout_marginTop="5dp">
 
         <ImageView
-            android:id="@+id/iv_userhead"
+            android:id="@+id/iv_user_head"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="5dp"
             android:background="@drawable/head"
             android:scaleType="fitXY" />
@@ -32,14 +32,14 @@
             android:layout_width="130dp"
             android:layout_height="145dp"
             android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/iv_userhead" >
+            android:layout_toLeftOf="@id/iv_user_head">
 
             <FrameLayout
                 android:id="@+id/chatting_click_area"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:padding="17dp"
-                android:background="@drawable/bg_chat_sent" >
+                android:background="@drawable/bg_chat_sent"
+                android:padding="17dp">
 
                 <ImageView
                     android:id="@+id/chatting_content_iv"
@@ -52,9 +52,9 @@
                     android:id="@+id/chatting_video_data_area"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:gravity="bottom"
                     android:background="@drawable/chat_video_mask_to"
-                    android:orientation="horizontal" >
+                    android:gravity="bottom"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/chatting_size_iv"
@@ -75,11 +75,12 @@
 
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/container_status_btn"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:gravity="center" >
+                    android:gravity="center">
 
                     <ImageView
                         android:id="@+id/chatting_status_btn"
@@ -97,16 +98,16 @@
             android:layout_centerInParent="true"
             android:layout_toLeftOf="@id/ll_click_area"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleSmall"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:indeterminateBehavior="repeat"
                 android:indeterminateDrawable="@drawable/small_progress"
                 android:indeterminateOnly="true"
-                android:indeterminateBehavior="repeat"
                 android:visibility="visible" />
 
             <TextView
@@ -138,6 +139,7 @@
             android:text="送达"
             android:textSize="12sp"
             android:visibility="invisible" />
+
         <TextView
             android:id="@+id/tv_delivered"
             style="@style/chat_time_stampe_style"
@@ -146,9 +148,7 @@
             android:layout_centerVertical="true"
             android:text="已读"
             android:textSize="12sp"
-            android:layout_toLeftOf="@id/tv_chatcontent"
-            android:visibility="invisible"
-            />
+            android:visibility="invisible" />
     </RelativeLayout>
 
 </LinearLayout>

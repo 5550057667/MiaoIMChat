@@ -12,7 +12,7 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
-import com.sky_wf.chinachat.MyApplication;
+import com.sky_wf.chinachat.App;
 import com.sky_wf.chinachat.R;
 import com.sky_wf.chinachat.activity.ChatActivity;
 import com.sky_wf.chinachat.chat.entity.SmsLoginException;
@@ -159,7 +159,7 @@ public class ChatManager
                                             public void onNext(String s)
                                             {
                                                 Debugger.d(TAG, s);
-                                                Utils.showLongToast(view, "注册成功！");
+//                                                Utils.showLongToast(view, "注册成功！");
                                                 listener.onSuccess();
                                                 SharedUtils.getInstance(context)
                                                         .putString(Constansts.PHONE, phone);
@@ -498,7 +498,7 @@ public class ChatManager
             case LOCATION:
                 break;
             case IMAGE:
-                digest = MyApplication.res.getString(R.string.picture);
+                digest = App.res.getString(R.string.picture);
                 break;
             case TXT:
                 if (!message.getBooleanAttribute(Constansts.MESSAGE_ATTR_IS_VOICE_CALL, false))
@@ -508,15 +508,15 @@ public class ChatManager
                 }
                 break;
             case VIDEO:
-                digest = MyApplication.res.getString(R.string.video);
+                digest = App.res.getString(R.string.video);
                 break;
             case VOICE:
-                digest = MyApplication.res.getString(R.string.voice);
+                digest = App.res.getString(R.string.voice);
                 break;
             case CMD:
                 break;
             case FILE:
-                digest = MyApplication.res.getString(R.string.file);
+                digest = App.res.getString(R.string.file);
                 break;
             default:
                 return "";
@@ -546,6 +546,14 @@ public class ChatManager
         }
     }
 
+    /**
+     * 查询用户信息
+     * 
+     * @param t
+     * @param usename
+     * @param <T>
+     * @return
+     */
     private <T> boolean isqueryByID(T t, String usename)
     {
         final boolean[] isQuery = { false };
@@ -569,6 +577,12 @@ public class ChatManager
 
     }
 
+    /**
+     * 跳转到ChatActivity
+     * 
+     * @param context
+     * @param conversation
+     */
     public void gtChat(Context context, EMConversation conversation)
     {
         Intent intent = new Intent(context, ChatActivity.class);
@@ -584,15 +598,16 @@ public class ChatManager
         {
 
             intent.putExtra(Constansts.TYPE, ChatConstants.CHAT_SINGLE);
-            Log.d("wftt", "usemap -->>" + MyApplication.userMap.get(conversation.conversationId()));
+            Log.d("wftt", "usemap -->>" + App.userMap.get(conversation.conversationId()));
             Log.d("wftt", "usemap getNickName -->>"
-                    + MyApplication.userMap.get(conversation.conversationId()).getNickName());
-            if (MyApplication.userMap.get(conversation.conversationId()) != null)
+                    + App.userMap.get(conversation.conversationId()).getNickName());
+            if (App.userMap.get(conversation.conversationId()) != null)
             {
                 intent.putExtra(Constansts.USERNAME,
-                        MyApplication.userMap.get(conversation.conversationId()).getNickName());
+                        App.userMap.get(conversation.conversationId()).getNickName());
             }
         }
+        conversation.markAllMessagesAsRead();
         context.startActivity(intent);
     }
 

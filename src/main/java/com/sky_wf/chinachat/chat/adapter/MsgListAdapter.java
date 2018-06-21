@@ -16,7 +16,7 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.util.DateUtils;
-import com.sky_wf.chinachat.MyApplication;
+import com.sky_wf.chinachat.App;
 import com.sky_wf.chinachat.R;
 import com.sky_wf.chinachat.chat.entity.User;
 import com.sky_wf.chinachat.chat.listener.OnItemClickListener;
@@ -84,9 +84,9 @@ public class MsgListAdapter extends RecyclerView.Adapter<MsgListAdapter.MsgListI
             Log.d("wftt>>>>>>", chat_ID + "<<>>" + group.getGroupName());
         } else
         {
-            if (MyApplication.userMap.containsKey(chat_ID))
+            if (App.userMap.containsKey(chat_ID))
             {
-                User user = MyApplication.userMap.get(chat_ID);
+                User user = App.userMap.get(chat_ID);
                 itemViewHolder.holder_txt_name.setText(user.getNickName());
             } else
             {
@@ -96,7 +96,7 @@ public class MsgListAdapter extends RecyclerView.Adapter<MsgListAdapter.MsgListI
                     @Override
                     public void onSucess(User user)
                     {
-                        MyApplication.userMap.put(chat_ID, user);
+                        App.userMap.put(chat_ID, user);
                         itemViewHolder.holder_txt_name.setText(user.getNickName());
 
                     }

@@ -63,5 +63,7 @@ dependencies {
     //    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     apt 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.android.support:design:27.1.1'
+    compile 'com.roger.catloadinglibrary:catloadinglibrary:1.0.4'
+
 }
 

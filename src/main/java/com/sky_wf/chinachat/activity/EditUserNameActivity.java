@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.roger.catloadinglibrary.CatLoadingView;
 import com.sky_wf.chinachat.R;
 import com.sky_wf.chinachat.activity.base.BaseActivity;
 import com.sky_wf.chinachat.chat.listener.CallBakcListener;
@@ -46,6 +47,7 @@ public class EditUserNameActivity extends BaseActivity implements CallBakcListen
     @BindView(R.id.btn_start)
     Button btnStart;
     private Context context;
+    private CatLoadingView catLoadingView;
     private final String TAG = "EditUserNameActivity";
 
     @Override
@@ -55,6 +57,7 @@ public class EditUserNameActivity extends BaseActivity implements CallBakcListen
         ButterKnife.bind(this);
         super.onCreate(savedInstanceState);
         context = this;
+        catLoadingView = new CatLoadingView();
         ChatManager.getInstance().setCallBackListener(this);
     }
 
@@ -63,6 +66,11 @@ public class EditUserNameActivity extends BaseActivity implements CallBakcListen
     {
         txtTitle.setText(R.string.app_name);
         txtTitle.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void initView() {
+
     }
 
     @Override
@@ -91,11 +99,13 @@ public class EditUserNameActivity extends BaseActivity implements CallBakcListen
 
     @Override
     public void onSuccess() {
+        showDialog("正在登录....");
         SharedUtils.getInstance(context).putString(Constansts.USERNAME,
                 etUsername.getText().toString());
-        Observable.timer(1,TimeUnit.SECONDS).subscribe(new Action1<Long>() {
+        Observable.timer(2,TimeUnit.SECONDS).subscribe(new Action1<Long>() {
             @Override
             public void call(Long aLong) {
+                hideDialog();
                 Intent intent = new Intent();
                 intent.setClass(EditUserNameActivity.this, MainActivity.class);
                 startActivity(intent);
@@ -107,6 +117,7 @@ public class EditUserNameActivity extends BaseActivity implements CallBakcListen
 
     @Override
     public void onFailed(Exception e) {
+        hideDialog();
 
     }
 

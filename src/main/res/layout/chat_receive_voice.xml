@@ -7,16 +7,17 @@
 
     <TextView
         android:id="@+id/time_stamp"
+        style="@style/chat_time_stampe_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text=""
-        style="@style/chat_time_stampe_style"
-        />
+        android:text="" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp">
+
         <ImageView
             android:id="@+id/iv_user_head"
             android:layout_width="50dp"
@@ -25,59 +26,59 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="5dp"
             android:scaleType="fitXY"
-            android:src="@drawable/head1"
-            />
+            android:src="@drawable/head1" />
+
         <TextView
             android:id="@+id/tv_chat_usename"
-            style="@style/chat_time_stampe_style"
+            style="@style/chat_text_name_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/iv_user_head" />
+
+        <ImageView
+            android:id="@+id/iv_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_below="@id/tv_chat_usename"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/iv_user_head"
-            />
-       <ImageView
-           android:id="@+id/iv_voice"
-           android:layout_width="wrap_content"
-           android:layout_height="45dp"
-           android:background="@drawable/bg_chat_content"
-           android:layout_marginLeft="10dp"
-           android:layout_toRightOf="@id/iv_user_head"
-           android:layout_below="@id/tv_chat_usename"
-           android:clickable="true"
-           android:paddingLeft="27dp"
-           android:paddingRight="27dp"
-           android:src="@drawable/chatfrom_voice_playing"
-           />
+            android:background="@drawable/bg_chat_content"
+            android:clickable="true"
+            android:paddingLeft="27dp"
+            android:paddingRight="27dp"
+            android:src="@drawable/chatfrom_voice_playing" />
+
         <TextView
             android:id="@+id/tv_voice_length"
             style="@style/chat_time_stampe_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_toRightOf="@id/iv_voice"
             android:layout_below="@id/tv_chat_usename"
-            android:text="3&apos;&apos;"/>
+            android:layout_toRightOf="@id/iv_voice"
+            android:gravity="center"
+            android:text="3&apos;&apos;" />
+
         <ImageView
             android:id="@+id/iv_unread_voice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:layout_below="@id/tv_chat_usename"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/tv_voice_length"
-            android:src="@drawable/voice_unread"
-            />
+            android:src="@drawable/voice_unread" />
+
         <ProgressBar
             android:id="@+id/progress_pic"
-            android:layout_toRightOf="@id/iv_unread_voice"
             style="@android:style/Widget.ProgressBar.Small"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/iv_unread_voice"
             android:indeterminateBehavior="repeat"
             android:indeterminateDrawable="@drawable/refresh_image"
             android:indeterminateOnly="true"
-            android:layout_marginTop="5dp"
-            android:visibility="invisible"
-            />
+            android:visibility="invisible" />
     </RelativeLayout>
 
 </LinearLayout>

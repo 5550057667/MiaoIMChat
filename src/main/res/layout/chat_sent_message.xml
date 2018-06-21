@@ -4,10 +4,10 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingTop="13dp" >
+    android:paddingTop="13dp">
 
     <TextView
-        android:id="@+id/timestamp"
+        android:id="@+id/time_stamp"
         style="@style/chat_time_stampe_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -15,31 +15,31 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp" >
+        android:layout_marginTop="5dp">
 
         <ImageView
-            android:id="@+id/iv_userhead"
+            android:id="@+id/iv_user_head"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="5dp"
             android:background="@drawable/head"
             android:scaleType="fitXY" />
 
-       <TextView
-            android:id="@+id/tv_chatcontent"
+        <TextView
+            android:id="@+id/tv_chat_content"
             style="@style/chat_time_stampe_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/iv_userhead"
+            android:layout_toLeftOf="@id/iv_user_head"
             android:autoLink="web"
-            android:padding="17dp"
             android:background="@drawable/bg_chat_sent"
             android:gravity="center"
             android:lineSpacingExtra="2dp"
             android:maxWidth="225.0dip"
+            android:padding="17dp"
             android:paddingLeft="8dip"
             android:textSize="15sp" />
 
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:layout_toLeftOf="@id/tv_chat_content"
             android:clickable="true"
             android:src="@drawable/bg_tv_ack"
             android:visibility="gone" />
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:layout_toLeftOf="@id/tv_chat_content"
             android:text="已读"
             android:textSize="12sp"
             android:visibility="invisible" />
@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:layout_toLeftOf="@id/tv_chat_content"
             android:text="送达"
             android:textSize="12sp"
             android:visibility="invisible" />
@@ -80,11 +80,11 @@
             android:id="@+id/pb_sending"
             android:layout_width="25dp"
             android:layout_height="25dp"
-                android:indeterminateDrawable="@drawable/small_progress"
-				android:indeterminateOnly="true"
-				android:indeterminateBehavior="repeat"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:layout_toLeftOf="@id/tv_chat_content"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateDrawable="@drawable/small_progress"
+            android:indeterminateOnly="true"
             android:visibility="visible" />
     </RelativeLayout>
 
