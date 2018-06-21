@@ -30,7 +30,7 @@
 
         <TextView
             android:id="@+id/tv_chat_usename"
-            style="@style/chat_time_stampe_style"
+            style="@style/chat_text_name_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"

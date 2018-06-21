@@ -8,7 +8,7 @@ import android.os.Environment;
 /**
  * @Date : 2018/5/31
  * @Author : WF
- * @Description :
+ * @Description :公共工具类
  */
 public class AppUtils
 {

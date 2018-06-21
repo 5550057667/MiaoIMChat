@@ -11,9 +11,8 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.view.View;
-import android.widget.Toast;
 
-import com.sky_wf.chinachat.MyApplication;
+import com.sky_wf.chinachat.App;
 import com.sky_wf.chinachat.R;
 
 import java.util.regex.Matcher;
@@ -109,7 +108,7 @@ public class Utils
         // Android3.0以上
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
         {
-            ClipboardManager clipboardManager = (ClipboardManager) MyApplication.context
+            ClipboardManager clipboardManager = (ClipboardManager) App.context
                     .getSystemService(Context.CLIPBOARD_SERVICE);
             if (null == clipboardManager || !clipboardManager.hasPrimaryClip())
             {
@@ -126,7 +125,7 @@ public class Utils
 
         } else
         {
-            android.text.ClipboardManager clipboardManager = (android.text.ClipboardManager) MyApplication.context
+            android.text.ClipboardManager clipboardManager = (android.text.ClipboardManager) App.context
                     .getSystemService(Context.CLIPBOARD_SERVICE);
             if(null == clipboardManager || !clipboardManager.hasText())
             {

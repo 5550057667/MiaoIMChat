@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="loadingView">
+        <attr name="loadingColor" format="color"/>
+        <attr name="successColor" format="color"/>
+        <attr name="failedColor" format="color"/>
+        <attr name="strokeWidth" format="dimension"/>
+        <attr name="isShowResult" format="boolean"/>
+    </declare-styleable>
+
+</resources>

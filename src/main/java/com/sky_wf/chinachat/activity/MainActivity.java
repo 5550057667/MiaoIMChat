@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
-import com.sky_wf.chinachat.MyApplication;
+import com.sky_wf.chinachat.App;
 import com.sky_wf.chinachat.R;
 import com.sky_wf.chinachat.activity.base.BaseFragmentActivity;
 import com.sky_wf.chinachat.activity.fragment.Fragment_Discover;
@@ -174,7 +174,7 @@ public class MainActivity extends BaseFragmentActivity
                 // manager.popBackStack();
                 // return true;
 //                EMClient.getInstance().logout(true);
-                MyApplication.exitActivity();
+                App.exitActivity();
 
         }
         return super.onKeyDown(keyCode, event);

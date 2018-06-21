@@ -93,6 +93,11 @@ public class SplashActivity extends BaseActivity implements CallBakcListener
     }
 
     @Override
+    protected void initView() {
+
+    }
+
+    @Override
     protected void setListener()
     {
 

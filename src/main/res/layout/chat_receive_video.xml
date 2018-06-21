@@ -2,72 +2,93 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingTop="13dp" >
+    android:paddingTop="13dp">
 
     <TextView
-        android:id="@+id/timestamp"
+        android:id="@+id/time_stamp"
         style="@style/chat_time_stampe_style"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp" >
+        android:layout_marginTop="5dp">
 
         <ImageView
-            android:id="@+id/iv_userhead"
+            android:id="@+id/iv_user_head"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="5dp"
-            android:background="@drawable/head"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            android:src="@drawable/head1" />
 
         <TextView
-            android:id="@+id/tv_userid"
+            android:id="@+id/tv_chat_usename"
             style="@style/chat_text_name_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@id/iv_userhead" />
-        <RelativeLayout
-            android:id="@+id/row_recv_pic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="17dp"
+            android:layout_toRightOf="@id/iv_user_head" />
+
+        <LinearLayout
+            android:id="@+id/linear_chat_video"
+            android:layout_width="130dp"
+            android:layout_height="145dp"
+            android:layout_below="@id/tv_chat_usename"
             android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/iv_userhead"
-            android:layout_below="@+id/tv_userid"
-            android:background="@drawable/bg_chat_content" >
+            android:layout_toRightOf="@id/iv_user_head"
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_marginLeft="4dp"
-                android:id="@+id/iv_call_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:src="@drawable/chat_video_call_receive"
-                />
+            <FrameLayout
+                android:id="@+id/frame_chat_video"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_chat_content"
+                android:padding="17dp">
 
-            <TextView
-                android:layout_toRightOf="@id/iv_call_icon"
-                android:id="@+id/tv_chatcontent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="苏定方"
-                android:padding="6dp"
-                android:minHeight="40dp"
-                android:textSize="15sp"
-                android:layout_centerVertical="true"
-                android:gravity="center_vertical"
-                android:textColor="@color/white" />
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/iv_chat_video"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY" />
 
-
+                <LinearLayout
+                    android:id="@+id/linear_video_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/chat_video_mask_to"
+                    android:gravity="bottom"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/tv_chat_video_size"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/white"
+                        android:visibility="visible"
+                        android:text="3MB"
+                        android:gravity="left"
+                        android:textSize="12sp"
+                        />
+                    <TextView
+                        android:id="@+id/tv_chat_video_length"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/white"
+                        android:visibility="visible"
+                        android:text="0230"
+                        android:gravity="right"
+                        android:textSize="12sp"
+                        />
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
     </RelativeLayout>
 
 </LinearLayout>

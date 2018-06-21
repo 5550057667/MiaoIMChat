@@ -26,6 +26,13 @@
             android:layout_marginLeft="5dp"
             android:background="@drawable/head"
             android:scaleType="fitXY" />
+        <TextView
+            android:id="@+id/tv_chat_usename"
+            style="@style/chat_text_name_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/iv_user_head" />
 
         <RelativeLayout
             android:id="@+id/rl_rcv_layout"
@@ -54,18 +61,11 @@
                 android:minHeight="40dp"
                 android:padding="6dp"
                 android:text="苏定方"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tv_userid"
-            style="@style/chat_text_name_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_userhead"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@id/rl_rcv_layout" />
+
     </RelativeLayout>
 
 </LinearLayout>

@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,12 +18,18 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sky_wf.chinachat.MyApplication;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
+import com.sky_wf.chinachat.App;
 import com.sky_wf.chinachat.R;
 import com.sky_wf.chinachat.activity.base.BaseActivity;
+import com.sky_wf.chinachat.chat.adapter.MessageAdapter;
+import com.sky_wf.chinachat.chat.listener.OnItemClickListener;
 import com.sky_wf.chinachat.chat.utils.ChatConstants;
 import com.sky_wf.chinachat.chat.views.PaseteEditText;
 import com.sky_wf.chinachat.utils.Constansts;
+import com.sky_wf.chinachat.utils.Debugger;
 import com.sky_wf.chinachat.utils.Utils;
 
 import butterknife.BindView;
@@ -33,9 +39,9 @@ import butterknife.OnClick;
 /**
  * @Date : 2018/6/8
  * @Author : WF
- * @Description :
+ * @Description :聊天Activity
  */
-public class ChatActivity extends BaseActivity
+public class ChatActivity extends BaseActivity implements OnItemClickListener
 {
 
     @BindView(R.id.txt_left)
@@ -99,10 +105,13 @@ public class ChatActivity extends BaseActivity
 
     private final int pageSize = 20;
     private String username;
-    private int type;
+    private int chatType;
     private int group_number;
     private String chat_id;
     private Context context;
+    private EMConversation conversation;
+    private MessageAdapter messageAdapter;
+    private final String TAG = "ChatActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -112,18 +121,34 @@ public class ChatActivity extends BaseActivity
         getIntentData();
         super.onCreate(savedInstanceState);
         context = this;
+        if (conversation != null)
+        {
+            messageAdapter = new MessageAdapter(conversation, context);
+        } else
+        {
+            Debugger.d(TAG, "conversation is null!!!!");
+        }
+        messageAdapter.setOnItemClickListener(this);
+        chatContent.setAdapter(messageAdapter);
+//        if (conversation.getAllMessages().size() > 0)
+//        {
+//            chatContent.smoothScrollToPosition(conversation.getAllMessages().size() - 1);
+//        }
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
-        MyApplication.acquireWakeLock();
+        App.acquireWakeLock();
+        messageAdapter.refresh();
     }
 
     @Override
-    protected void onPause() {
+    protected void onPause()
+    {
         super.onPause();
-        MyApplication.releaseWakeLock();
+        App.releaseWakeLock();
     }
 
     private void getIntentData()
@@ -131,9 +156,9 @@ public class ChatActivity extends BaseActivity
         Intent intent = getIntent();
         chat_id = intent.getStringExtra(Constansts.User_ID);
         username = intent.getStringExtra(Constansts.USERNAME);
-        type = intent.getIntExtra(Constansts.TYPE, 0);
+        chatType = intent.getIntExtra(Constansts.TYPE, 0);
 
-        if (type == ChatConstants.CHAT_GROUP)
+        if (chatType == ChatConstants.CHAT_GROUP)
         {
             group_number = intent.getIntExtra(Constansts.GROUP_NUMBER, 0);
         } else
@@ -143,7 +168,11 @@ public class ChatActivity extends BaseActivity
                 username = "好友";
             }
         }
-        Log.d("wftt", "chat_id==" + chat_id + "username==" + username + "type==" + type
+        if (null != chat_id)
+        {
+            conversation = EMClient.getInstance().chatManager().getConversation(chat_id);
+        }
+        Debugger.d(TAG, "chat_id==" + chat_id + "username==" + username + "chatType==" + chatType
                 + "groupnumber==" + group_number);
     }
 
@@ -151,7 +180,7 @@ public class ChatActivity extends BaseActivity
     protected void initTitle()
     {
         txtLeft.setVisibility(View.VISIBLE);
-        if (type == ChatConstants.CHAT_GROUP)
+        if (chatType == ChatConstants.CHAT_GROUP)
         {
             txtLeft.setText(username + "(" + group_number + ")");
         } else
@@ -165,6 +194,16 @@ public class ChatActivity extends BaseActivity
     }
 
     @Override
+    protected void initView()
+    {
+        LinearLayoutManager manager = new LinearLayoutManager(context);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        manager.setStackFromEnd(true);
+        chatContent.setLayoutManager(manager);
+
+    }
+
+    @Override
     protected void setListener()
     {
         etMessage.addTextChangedListener(new pasteEditTextWatcher());
@@ -174,7 +213,7 @@ public class ChatActivity extends BaseActivity
             R.id.iv_emotions_normal, R.id.iv_emotions_enable, R.id.btn_more, R.id.btn_send,
             R.id.chat_face_container, R.id.view_photo, R.id.view_camera, R.id.view_location,
             R.id.view_file, R.id.view_audio, R.id.view_video, R.id.chat_tools_container, R.id.more,
-            R.id.img_chat_talk, R.id.et_message,R.id.btn_mode_voice})
+            R.id.img_chat_talk, R.id.et_message, R.id.btn_mode_voice })
     public void onViewClicked(View view)
     {
         switch (view.getId())
@@ -199,6 +238,7 @@ public class ChatActivity extends BaseActivity
                 handleBtnMore();
                 break;
             case R.id.btn_send:
+                sendText(etMessage.getText().toString());
                 break;
             case R.id.chat_face_container:
                 break;
@@ -226,6 +266,21 @@ public class ChatActivity extends BaseActivity
             case R.id.btn_mode_voice:
                 handleModeVoice();
                 break;
+        }
+    }
+
+    private void sendText(String content)
+    {
+        if (content.length() > 0)
+        {
+            EMMessage message = EMMessage.createTxtSendMessage(content, chat_id);
+            if (chatType == ChatConstants.CHAT_GROUP)
+            {
+                message.setChatType(EMMessage.ChatType.GroupChat);
+            }
+            EMClient.getInstance().chatManager().sendMessage(message);
+            etMessage.setText("");
+            messageAdapter.refresh();
         }
     }
 
@@ -313,7 +368,7 @@ public class ChatActivity extends BaseActivity
 
     }
 
-    //处理语音按钮
+    // 处理语音按钮
     private void handleModeVoice()
     {
         hideKeyBoard();
@@ -330,28 +385,44 @@ public class ChatActivity extends BaseActivity
 
     }
 
+    @Override
+    public void onClick(View view, int position)
+    {
+
+    }
+
+    @Override
+    public void onLongClick(View view, int position)
+    {
+
+    }
+
     class pasteEditTextWatcher implements TextWatcher
     {
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        public void beforeTextChanged(CharSequence s, int start, int count, int after)
+        {
 
         }
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if(!TextUtils.isEmpty(s))
+        public void onTextChanged(CharSequence s, int start, int before, int count)
+        {
+            if (!TextUtils.isEmpty(s))
             {
                 btnMore.setVisibility(View.GONE);
                 btnSend.setVisibility(View.VISIBLE);
-            }else {
+            } else
+            {
                 btnSend.setVisibility(View.GONE);
                 btnMore.setVisibility(View.VISIBLE);
             }
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
+        public void afterTextChanged(Editable s)
+        {
 
         }
     }

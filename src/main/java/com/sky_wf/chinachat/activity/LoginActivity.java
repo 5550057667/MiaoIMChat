@@ -10,7 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.sky_wf.chinachat.MyApplication;
+import com.roger.catloadinglibrary.CatLoadingView;
+import com.sky_wf.chinachat.App;
 import com.sky_wf.chinachat.R;
 import com.sky_wf.chinachat.activity.base.BaseActivity;
 import com.sky_wf.chinachat.chat.entity.LoginExceptionHandle;
@@ -49,11 +50,13 @@ public class LoginActivity extends BaseActivity implements CallBakcListener
     @BindView(R.id.btn_gt_register)
     Button btnGtRegister;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
         super.onCreate(savedInstanceState);
         Debugger.d(TAG, "<<onCreate>>");
 
@@ -64,6 +67,12 @@ public class LoginActivity extends BaseActivity implements CallBakcListener
     {
         txtTitle.setVisibility(View.VISIBLE);
         txtTitle.setText(R.string.login_title);
+    }
+
+    @Override
+    protected void initView()
+    {
+
     }
 
     @Override
@@ -86,6 +95,7 @@ public class LoginActivity extends BaseActivity implements CallBakcListener
     {
         super.onStop();
         Debugger.d(TAG, "<<onStop>>");
+
     }
 
     @Override
@@ -97,7 +107,7 @@ public class LoginActivity extends BaseActivity implements CallBakcListener
 
     private void gtRegister()
     {
-        MyApplication.addAcitivtyList(this);
+        App.addAcitivtyList(this);
         Intent intent = new Intent();
         intent.setClass(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
@@ -134,6 +144,7 @@ public class LoginActivity extends BaseActivity implements CallBakcListener
     {
         if (isNetAvaliable())
         {
+            showDialog(null);
             ChatManager.getInstance().login(this, etLoginPhone.getText().toString(),
                     etLoginPw.getText().toString());
         } else
@@ -141,6 +152,7 @@ public class LoginActivity extends BaseActivity implements CallBakcListener
             Utils.showLongToast(btnLogin, getString(R.string.net_error));
         }
     }
+
 
     @Override
     public void onSuccess()
@@ -150,15 +162,17 @@ public class LoginActivity extends BaseActivity implements CallBakcListener
             @Override
             public void run()
             {
-                Utils.showLongToast(btnLogin, getString(R.string.login_sucess));
-                Observable.timer(2, TimeUnit.SECONDS).subscribe(new Action1<Long>()
+//                showDialog("登录成功，正在加载数据...");
+                Observable.timer(1, TimeUnit.SECONDS).subscribe(new Action1<Long>()
                 {
                     @Override
                     public void call(Long aLong)
                     {
                         gtChat();
+                        hideDialog();
                     }
                 });
+
             }
         });
 
@@ -173,7 +187,16 @@ public class LoginActivity extends BaseActivity implements CallBakcListener
             @Override
             public void run()
             {
-                LoginExceptionHandle.handleErrorMsg(btnLogin, e);
+                Observable.timer(1, TimeUnit.SECONDS).subscribe(new Action1<Long>()
+                {
+                    @Override
+                    public void call(Long aLong)
+                    {
+                        hideDialog();
+                        LoginExceptionHandle.handleErrorMsg(btnLogin, e);
+                    }
+                });
+
             }
         });
 
