@@ -12,9 +12,11 @@ import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
+import com.hyphenate.chat.EMMessage;
 import com.sky_wf.chinachat.App;
 import com.sky_wf.chinachat.R;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

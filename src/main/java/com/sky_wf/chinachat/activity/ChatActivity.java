@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
@@ -25,6 +27,7 @@ import com.sky_wf.chinachat.App;
 import com.sky_wf.chinachat.R;
 import com.sky_wf.chinachat.activity.base.BaseActivity;
 import com.sky_wf.chinachat.chat.adapter.MessageAdapter;
+import com.sky_wf.chinachat.chat.adapter.MsgListAdapter;
 import com.sky_wf.chinachat.chat.listener.OnItemClickListener;
 import com.sky_wf.chinachat.chat.utils.ChatConstants;
 import com.sky_wf.chinachat.chat.views.PaseteEditText;
@@ -32,9 +35,17 @@ import com.sky_wf.chinachat.utils.Constansts;
 import com.sky_wf.chinachat.utils.Debugger;
 import com.sky_wf.chinachat.utils.Utils;
 
+import java.sql.Time;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * @Date : 2018/6/8
@@ -110,6 +121,7 @@ public class ChatActivity extends BaseActivity implements OnItemClickListener
     private String chat_id;
     private Context context;
     private EMConversation conversation;
+    private EMMessageListener msgListener;
     private MessageAdapter messageAdapter;
     private final String TAG = "ChatActivity";
 
@@ -130,10 +142,11 @@ public class ChatActivity extends BaseActivity implements OnItemClickListener
         }
         messageAdapter.setOnItemClickListener(this);
         chatContent.setAdapter(messageAdapter);
-//        if (conversation.getAllMessages().size() > 0)
-//        {
-//            chatContent.smoothScrollToPosition(conversation.getAllMessages().size() - 1);
-//        }
+        if (msgListener != null)
+        {
+            EMClient.getInstance().chatManager().addMessageListener(msgListener);
+        }
+
     }
 
     @Override
@@ -149,6 +162,16 @@ public class ChatActivity extends BaseActivity implements OnItemClickListener
     {
         super.onPause();
         App.releaseWakeLock();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        if (msgListener != null)
+        {
+            EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+        }
     }
 
     private void getIntentData()
@@ -198,7 +221,8 @@ public class ChatActivity extends BaseActivity implements OnItemClickListener
     {
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
-        manager.setStackFromEnd(true);
+        // manager.setStackFromEnd(true);
+        manager.setReverseLayout(true);
         chatContent.setLayoutManager(manager);
 
     }
@@ -207,6 +231,73 @@ public class ChatActivity extends BaseActivity implements OnItemClickListener
     protected void setListener()
     {
         etMessage.addTextChangedListener(new pasteEditTextWatcher());
+        chatContent.addOnLayoutChangeListener(new View.OnLayoutChangeListener()
+        {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom,
+                    int oldLeft, int oldTop, int oldRight, int oldBottom)
+            {
+                if (bottom < oldBottom)
+                {
+                    Observable.timer(50, TimeUnit.MILLISECONDS)
+                            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Long>()
+                            {
+                                @Override
+                                public void call(Long aLong)
+                                {
+                                    if (messageAdapter.getItemCount() > 0)
+                                    {
+                                        chatContent.smoothScrollToPosition(
+                                                0);
+                                    }
+                                }
+                            });
+
+                }
+            }
+        });
+        msgListener = new EMMessageListener()
+        {
+            @Override
+            public void onMessageReceived(List<EMMessage> list)
+            {
+                Debugger.d("wftt",
+                        "ChatActivity关键点收到新消息数目>>>>" + list.size() + MainActivity.isMain());
+                messageAdapter.addSingleMessage(list.get(0));
+                messageAdapter.notifyItemInserted(0);
+                 updateMsgList();
+            }
+
+            @Override
+            public void onCmdMessageReceived(List<EMMessage> list)
+            {
+
+            }
+
+            @Override
+            public void onMessageRead(List<EMMessage> list)
+            {
+                Debugger.d("wftt", "收到已读回执" + list.size());
+            }
+
+            @Override
+            public void onMessageDelivered(List<EMMessage> list)
+            {
+                Debugger.d("wftt", "收到送达回执" + list.size());
+            }
+
+            @Override
+            public void onMessageRecalled(List<EMMessage> list)
+            {
+
+            }
+
+            @Override
+            public void onMessageChanged(EMMessage emMessage, Object o)
+            {
+
+            }
+        };
     }
 
     @OnClick({ R.id.img_back, R.id.img_right, R.id.btn_keyboard_mode, R.id.btn_press_to_speak,
@@ -274,14 +365,31 @@ public class ChatActivity extends BaseActivity implements OnItemClickListener
         if (content.length() > 0)
         {
             EMMessage message = EMMessage.createTxtSendMessage(content, chat_id);
+            // EMMessage message1 = EMMessage.createTxtSendMessage(content, "18829210302");
             if (chatType == ChatConstants.CHAT_GROUP)
             {
                 message.setChatType(EMMessage.ChatType.GroupChat);
             }
             EMClient.getInstance().chatManager().sendMessage(message);
+            // EMClient.getInstance().chatManager().sendMessage(message1);
             etMessage.setText("");
-            messageAdapter.refresh();
+            messageAdapter.addSingleMessage(message);
+            messageAdapter.notifyItemInserted(0);
+             updateMsgList();
         }
+    }
+
+    private void updateMsgList()
+    {
+        Observable.timer(300, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Long>()
+                {
+                    @Override
+                    public void call(Long aLong)
+                    {
+                        chatContent.smoothScrollToPosition(0);
+                    }
+                });
     }
 
     // 显示表情

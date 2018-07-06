@@ -598,9 +598,13 @@ public class ChatManager
         {
 
             intent.putExtra(Constansts.TYPE, ChatConstants.CHAT_SINGLE);
-            Log.d("wftt", "usemap -->>" + App.userMap.get(conversation.conversationId()));
-            Log.d("wftt", "usemap getNickName -->>"
-                    + App.userMap.get(conversation.conversationId()).getNickName());
+            if(App.userMap.get(conversation.conversationId())!=null) {
+                Debugger.d("wftt", "usemap -->>" + App.userMap.get(conversation.conversationId()));
+                Debugger.d("wftt", "usemap getNickName -->>"
+                        + App.userMap.get(conversation.conversationId()).getNickName());
+            }else {
+                Debugger.d("wftt", "usemap -->>" + "App.userMap.get(conversation.conversationId()) is null!!!!" );
+            }
             if (App.userMap.get(conversation.conversationId()) != null)
             {
                 intent.putExtra(Constansts.USERNAME,
