@@ -122,6 +122,8 @@ public class Fragment_Msg extends BaseFragment implements OnItemClickListener
         LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         msgList.setLayoutManager(manager);
+        initConnactList();
+        msgList.setAdapter(msgListAdapter);
         // msgList.setAdapter(msgListAdapter);
         // lineaNetError.setVisibility(View.VISIBLE);
     }
@@ -136,13 +138,14 @@ public class Fragment_Msg extends BaseFragment implements OnItemClickListener
     {
         conversationList.clear();
         conversationList.addAll(ChatManager.getInstance().loadConversationWithRecentChat());
+        msgListAdapter.notifyDataSetChanged();
         if (conversationList != null && conversationList.size() != 0)
         {
             tv_no_chat.setVisibility(View.INVISIBLE);
             // 添加一个公众号
             Debugger.d(TAG, "<<loadConversationWithRecentChat---initConnactList当前用户的会话总数>>"
                     + conversationList.size());
-            msgList.setAdapter(msgListAdapter);
+
         } else
         {
             tv_no_chat.setVisibility(View.VISIBLE);

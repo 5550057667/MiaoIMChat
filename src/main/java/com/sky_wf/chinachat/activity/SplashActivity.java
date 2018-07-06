@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 /**
@@ -131,8 +132,8 @@ public class SplashActivity extends BaseActivity implements CallBakcListener
             @Override
             public void run()
             {
-                Utils.showLongToast(imgStart, getString(R.string.login_sucess));
-                Observable.timer(3, TimeUnit.SECONDS).subscribe(new Action1<Long>()
+//                Utils.showLongToast(imgStart, getString(R.string.login_sucess));
+                Observable.timer(3, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Long>()
                 {
                     @Override
                     public void call(Long aLong)

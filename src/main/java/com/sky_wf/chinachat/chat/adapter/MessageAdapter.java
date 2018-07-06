@@ -27,6 +27,8 @@ import com.sky_wf.chinachat.chat.utils.ChatConstants;
 import com.sky_wf.chinachat.chat.utils.SmileUtils;
 import com.sky_wf.chinachat.utils.Debugger;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -53,7 +55,7 @@ public class MessageAdapter extends RecyclerView.Adapter
     {
         this.conversation = conversation;
         this.mContext = mContext;
-        this.msgList = conversation.getAllMessages();
+        this.msgList = new ArrayList<EMMessage>();
         this.msgCount = conversation.getAllMsgCount();
 
     }
@@ -63,10 +65,28 @@ public class MessageAdapter extends RecyclerView.Adapter
         itemClickListener = onItemClickListener;
     }
 
+    public void addNewMessage(List<EMMessage> msgList)
+    {
+        if (msgList != null && msgList.size() > 0)
+        {
+            for (EMMessage emMessage : msgList)
+            {
+                msgList.add(emMessage);
+                conversation.markMessageAsRead(emMessage.getMsgId());
+            }
+        }
+    }
+
+    public void addSingleMessage(EMMessage emMessage)
+    {
+        msgList.add(0,emMessage);
+    }
+
     public void refresh()
     {
 
         this.msgList = conversation.getAllMessages();
+        Collections.reverse(msgList);
         this.msgCount = conversation.getAllMsgCount();
         notifyDataSetChanged();
         Debugger.d(TAG, "refresh>>getAllMessages===内存中消息数" + msgList.size());
@@ -83,7 +103,6 @@ public class MessageAdapter extends RecyclerView.Adapter
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i)
     {
-        Debugger.d("wftt", "onBindViewHolder>>>" + msgList.size());
         EMMessage emMessage = msgList.get(i);
         EMMessage.ChatType type = emMessage.getChatType();
         if (null != viewHolder)
@@ -131,15 +150,18 @@ public class MessageAdapter extends RecyclerView.Adapter
     public int getItemCount()
     {
         Debugger.d(TAG, "getItemCount" + conversation.getAllMsgCount());
-        return conversation.getAllMsgCount();
+        return msgList.size();
     }
 
     @Override
     public int getItemViewType(int position)
     {
-        if (msgCount > msgList.size())
+        if (msgCount < msgList.size())
         {
-            // 内存中的消息数小于本地数据库中消息数，则从数据库中加载
+            // 内存中的消息数大于本地数据库中消息数
+        }else if(msgCount > msgList.size())
+        {
+            //内存中的消息数小于本地数据库中消息数
         }
         if (msgList.size() > 0)
         {

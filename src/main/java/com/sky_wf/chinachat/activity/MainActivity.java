@@ -1,6 +1,7 @@
 package com.sky_wf.chinachat.activity;
 
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
@@ -8,7 +9,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
 import com.sky_wf.chinachat.App;
 import com.sky_wf.chinachat.R;
 import com.sky_wf.chinachat.activity.base.BaseFragmentActivity;
@@ -18,6 +21,13 @@ import com.sky_wf.chinachat.activity.fragment.Fragment_Msg;
 import com.sky_wf.chinachat.activity.fragment.Fragment_Porfile;
 import com.sky_wf.chinachat.utils.Constansts;
 import com.sky_wf.chinachat.utils.Debugger;
+
+import java.util.List;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 public class MainActivity extends BaseFragmentActivity
 {
@@ -37,6 +47,8 @@ public class MainActivity extends BaseFragmentActivity
 
     private int currentTabIndex = 0;// 当前Fragment的index
     private int index = 0;
+
+    private EMMessageListener emMessageListener;
     private final String TAG = "MainActivity";
 
     @Override
@@ -47,12 +59,82 @@ public class MainActivity extends BaseFragmentActivity
         Debugger.d(TAG, ">>onCreate<<");
         findViewById();
         initViews();
+        initListener();
         initTabView();
+        EMClient.getInstance().chatManager().addMessageListener(emMessageListener);
+    }
+
+    private void initListener() {
+        emMessageListener = new EMMessageListener() {
+            @Override
+            public void onMessageReceived(List<EMMessage> list) {
+                Debugger.d(TAG,"MainActivity 已经收到最新消息"+"消息数"+list.size());
+                Observable.create(new Observable.OnSubscribe<Object>() {
+
+                    @Override
+                    public void call(Subscriber<? super Object> subscriber) {
+                        subscriber.onNext(null);
+
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Object>() {
+
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+                        Debugger.d(TAG,"收到新消息开始刷新"+isMain());
+                        refresh();
+                    }
+                });
+                Debugger.d(TAG,"当前线程是否为主线程："+isMain());
+
+
+            }
+
+            @Override
+            public void onCmdMessageReceived(List<EMMessage> list) {
+
+            }
+
+            @Override
+            public void onMessageRead(List<EMMessage> list) {
+
+            }
+
+            @Override
+            public void onMessageDelivered(List<EMMessage> list) {
+
+            }
+
+            @Override
+            public void onMessageRecalled(List<EMMessage> list) {
+
+            }
+
+            @Override
+            public void onMessageChanged(EMMessage emMessage, Object o) {
+
+            }
+        };
+    }
+
+    public static  boolean isMain()
+    {
+        return Thread.currentThread() == Looper.getMainLooper().getThread();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+//        updateUnreadLabel();
         refresh();
     }
 
