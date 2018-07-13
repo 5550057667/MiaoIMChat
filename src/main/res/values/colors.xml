@@ -10,7 +10,6 @@
     <color name="transparent2">#50000000</color>
     <!--窗体颜色 -->
     <color name="windows_color">#F5F5F5</color>
-    <color name="bar_color">#232325</color>
     <color name="popbg_color">#49484A</color>
 
     <color name="light_notes_color">#ff999999</color>
@@ -112,5 +111,7 @@
     <color name="bg_net_error">#fff3bb</color>
     <color name="line_net_error">#e3e0d5</color>
     <color name="bg_chat">#f2f0eb</color>
+    <color name="bar_color">#232325</color>
+    <color name="bar_color_trans">#ffff6cad</color>
 
 </resources>

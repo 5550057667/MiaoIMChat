@@ -2,7 +2,6 @@ package com.sky_wf.chinachat.chat.manager;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 
 import com.hyphenate.EMCallBack;
@@ -14,7 +13,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.exceptions.HyphenateException;
 import com.sky_wf.chinachat.App;
 import com.sky_wf.chinachat.R;
-import com.sky_wf.chinachat.activity.ChatActivity;
+import com.sky_wf.chinachat.views.activity.ChatActivity;
 import com.sky_wf.chinachat.chat.entity.SmsLoginException;
 import com.sky_wf.chinachat.chat.entity.User;
 import com.sky_wf.chinachat.chat.entity.UserGroupInfo;

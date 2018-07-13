@@ -52,6 +52,7 @@
         android:layout_marginRight="5dp"
         android:contentDescription="@string/app_name"
         android:visibility="gone"
+        android:onClick="onPopTitleClick"
         android:src="@drawable/icon_add" />
 
     <TextView

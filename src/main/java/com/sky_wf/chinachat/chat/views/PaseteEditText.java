@@ -8,12 +8,9 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
-import com.sky_wf.chinachat.activity.ChatActivity;
 import com.sky_wf.chinachat.chat.utils.ChatConstants;
 import com.sky_wf.chinachat.utils.Constansts;
 import com.sky_wf.chinachat.utils.Utils;
-
-import okhttp3.internal.Util;
 
 /**
  * @Date : 2018/6/11
