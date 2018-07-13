@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.MainActivity">
+    android:fitsSystemWindows="true"
+    tools:context=".views.activity.MainActivity">
     <include android:id="@+id/layout_bar" layout="@layout/layout_title"/>
     <FrameLayout
         android:id="@+id/frame_container"

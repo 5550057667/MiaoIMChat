@@ -72,7 +72,7 @@
 
         <!--引导页-->
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".views.activity.SplashActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -82,24 +82,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".views.activity.LoginActivity"
             android:windowSoftInputMode="adjustPan"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".views.activity.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".activity.RegisterActivity"
+            android:name=".views.activity.RegisterActivity"
             android:windowSoftInputMode="stateHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".activity.EditUserNameActivity"
+        <activity android:name=".views.activity.EditUserNameActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".activity.ChatActivity"
+        <activity android:name=".views.activity.ChatActivity"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="portrait"></activity>

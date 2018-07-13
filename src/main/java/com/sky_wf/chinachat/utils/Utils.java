@@ -6,11 +6,15 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.hyphenate.chat.EMMessage;
 import com.sky_wf.chinachat.App;
@@ -129,7 +133,7 @@ public class Utils
         {
             android.text.ClipboardManager clipboardManager = (android.text.ClipboardManager) App.context
                     .getSystemService(Context.CLIPBOARD_SERVICE);
-            if(null == clipboardManager || !clipboardManager.hasText())
+            if (null == clipboardManager || !clipboardManager.hasText())
             {
                 return "";
             }
@@ -141,9 +145,69 @@ public class Utils
     public static void finish(Activity activity)
     {
         activity.finish();
-        activity.overridePendingTransition(R.anim.push_up_in,R.anim.push_up_out);
+        activity.overridePendingTransition(R.anim.push_up_in, R.anim.push_up_out);
     }
 
+    public static int[] getScreenDisplay(Context context)
+    {
+        int location[] = new int[2];
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        location[0] = wm.getDefaultDisplay().getWidth();
+        location[1] = wm.getDefaultDisplay().getHeight();
+        return location;
+    }
 
+    public static int getScreenHeight(Context mContext)
+    {
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        return wm.getDefaultDisplay().getHeight();
+    }
+
+    public static int getScreenWidth(Context mContext)
+    {
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        return wm.getDefaultDisplay().getWidth();
+    }
+
+    /**设置透明状态栏
+     * @param activity
+     * @param useThemStatusColor  设置是否使用自定义的状态栏背景颜色
+     * @param withLightStatusBar  设置状态栏显示深色字体还是白色字体
+     * @param color               设置需要设置的状态栏背景颜色
+     */
+    public static void setStatusColor(Activity activity, boolean useThemStatusColor,
+            boolean withLightStatusBar, int color)
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            View decorView = activity.getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            decorView.setSystemUiVisibility(option);
+            if (useThemStatusColor)
+            {
+                activity.getWindow().setStatusBarColor(color);
+            } else
+            {
+                activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+            }
+
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        {
+            WindowManager.LayoutParams params = activity.getWindow().getAttributes();
+            params.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | params.flags);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if(withLightStatusBar)
+            {
+                activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            }else {
+                activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+            }
+//            activity.getWindow().getDecorView().setSystemUiVisibility(
+//                    View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
+
+    }
 
 }
